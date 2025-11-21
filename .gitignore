@@ -1,0 +1,30 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+
+# User-specific files
+UserSettings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Visual Studio / Rider
+.vscode/
+*.csproj
+*.sln
+*.user
+*.pidb
+*.unityproj
+*.booproj
+
+# Package manager
+Packages/manifest.json
+Packages/packages-lock.json
+
+# Optional: cache server
+Cache/
