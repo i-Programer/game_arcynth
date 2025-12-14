@@ -107,51 +107,44 @@ public class DungeonGenerator : MonoBehaviour
 
     void SetupDoors()
     {
-        for (int x = 0; x < width; x++)
+        // First pass: turn everything OFF once
+        foreach (Vector2Int pos in occupiedPositions)
         {
-            for (int y = 0; y < height; y++)
+            Room r = grid[pos.x, pos.y].GetComponent<Room>();
+            r.topDoor.SetActive(false);
+            r.bottomDoor.SetActive(false);
+            r.leftDoor.SetActive(false);
+            r.rightDoor.SetActive(false);
+        }
+
+        // Second pass: create connections ONCE
+        foreach (Vector2Int pos in occupiedPositions)
+        {
+            Room room = grid[pos.x, pos.y].GetComponent<Room>();
+
+            // RIGHT connection
+            Vector2Int right = pos + Vector2Int.right;
+            if (IsInsideGrid(right) && grid[right.x, right.y] != null)
             {
-                GameObject roomObj = grid[x, y];
-                if (roomObj == null) continue;
+                room.rightDoor.SetActive(true);
+                grid[right.x, right.y].GetComponent<Room>().leftDoor.SetActive(true);
+            }
 
-                Room room = roomObj.GetComponent<Room>();
-
-                // Reset everything first
-                room.topDoor.SetActive(false);
-                room.bottomDoor.SetActive(false);
-                room.leftDoor.SetActive(false);
-                room.rightDoor.SetActive(false);
-
-                // UP
-                if (y + 1 < height && grid[x, y + 1] != null)
-                {
-                    room.topDoor.SetActive(true);
-                    grid[x, y + 1].GetComponent<Room>().bottomDoor.SetActive(true);
-                }
-
-                // DOWN
-                if (y - 1 >= 0 && grid[x, y - 1] != null)
-                {
-                    room.bottomDoor.SetActive(true);
-                    grid[x, y - 1].GetComponent<Room>().topDoor.SetActive(true);
-                }
-
-                // RIGHT
-                if (x + 1 < width && grid[x + 1, y] != null)
-                {
-                    room.rightDoor.SetActive(true);
-                    grid[x + 1, y].GetComponent<Room>().leftDoor.SetActive(true);
-                }
-
-                // LEFT
-                if (x - 1 >= 0 && grid[x - 1, y] != null)
-                {
-                    room.leftDoor.SetActive(true);
-                    grid[x - 1, y].GetComponent<Room>().rightDoor.SetActive(true);
-                }
+            // UP connection
+            Vector2Int up = pos + Vector2Int.up;
+            if (IsInsideGrid(up) && grid[up.x, up.y] != null)
+            {
+                room.topDoor.SetActive(true);
+                grid[up.x, up.y].GetComponent<Room>().bottomDoor.SetActive(true);
             }
         }
     }
+
+    bool IsInsideGrid(Vector2Int p)
+    {
+        return p.x >= 0 && p.x < width && p.y >= 0 && p.y < height;
+    }
+
 
 
     void CenterDungeon()
